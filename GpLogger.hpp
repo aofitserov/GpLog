@@ -36,6 +36,7 @@ private:
     GpLogExecutor::SP       iLogExecutor;
     GpLogLevel::EnumT       iDefaultLevel   = GpLogLevel::INFO;
     CategoryLevelsT         iCategoryLevels;
+    const microseconds_t    iStartSteadyTS;
 
     static GpLogger         sLogger;
 };

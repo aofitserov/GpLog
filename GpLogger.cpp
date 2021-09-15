@@ -5,7 +5,8 @@ namespace GPlatform {
 
 GpLogger    GpLogger::sLogger;
 
-GpLogger::GpLogger (void) noexcept
+GpLogger::GpLogger (void) noexcept:
+iStartSteadyTS(GpDateTimeOps::SSteadyTS_us())
 {
 }
 
@@ -78,7 +79,7 @@ void    GpLogger::Log
     GpLogElement logElement
     (
         GpDateTimeOps::SUnixTS_ms(),
-        GpDateTimeOps::SSteadyTS_us(),
+        GpDateTimeOps::SSteadyTS_us() - iStartSteadyTS,
         std::this_thread::get_id(),
         currentTask.IsNotNULL() ? std::string(currentTask->Name()) : std::string(""_sv),
         aLevel,

@@ -25,8 +25,7 @@ void    GpLogRunnable::Run (GpThreadStopToken aStopToken) noexcept
         while (!aStopToken.stop_requested())
         {
             Consume(consumers);
-            //WaitForWakeup(0.5_si_s);
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            WaitForWakeup(0.5_si_s);
         }
 
         Consume(consumers);
