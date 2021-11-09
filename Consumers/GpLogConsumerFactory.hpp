@@ -11,7 +11,7 @@ public:
     CLASS_DECLARE_DEFAULTS(GpLogConsumerFactory)
 
 protected:
-                                GpLogConsumerFactory    (GpLogFormatter::SP aFormatter) noexcept;
+                                GpLogConsumerFactory    (GpByteSerializer::SP aFormatter) noexcept;
 
 public:
     virtual                     ~GpLogConsumerFactory   (void) noexcept;
@@ -19,10 +19,10 @@ public:
     virtual GpLogConsumer::SP   NewInstance             (void) const = 0;
 
 protected:
-    GpLogFormatter::SP          Formatter               (void) const noexcept {return iFormatter;}
+    GpByteSerializer::SP        Formatter               (void) const noexcept {return iFormatter;}
 
 private:
-    GpLogFormatter::SP          iFormatter;
+    GpByteSerializer::SP        iFormatter;
 };
 
 }//namespace GPlatform

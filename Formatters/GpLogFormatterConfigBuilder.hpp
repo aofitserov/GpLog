@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GpLogFormatterFactory.hpp"
 #include "GpLogFormatterConfigDesc.hpp"
 
 namespace GPlatform {
@@ -12,7 +11,7 @@ public:
     CLASS_DECLARE_DEFAULTS(GpLogFormatterConfigBuilder)
 
 public:
-    static GpLogFormatterFactory::SP    SFromConfig (const GpLogFormatterConfigDesc& aConfigDesc);
+    static GpByteSerializerFactory::SP  SFromConfig (const GpLogFormatterConfigDesc& aConfigDesc);
 };
 
 }//namespace GPlatform

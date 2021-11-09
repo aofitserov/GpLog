@@ -8,6 +8,10 @@ GpLogFormatterTextConfigDesc::GpLogFormatterTextConfigDesc (void) noexcept
 {
 }
 
+GpLogFormatterTextConfigDesc::GpLogFormatterTextConfigDesc (const GpLogFormatterTextConfigDesc& /*aDesc*/)
+{
+}
+
 GpLogFormatterTextConfigDesc::~GpLogFormatterTextConfigDesc (void) noexcept
 {
 }

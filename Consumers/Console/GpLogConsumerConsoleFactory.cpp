@@ -4,7 +4,7 @@
 
 namespace GPlatform {
 
-GpLogConsumerConsoleFactory::GpLogConsumerConsoleFactory (GpLogFormatter::SP aFormatter) noexcept:
+GpLogConsumerConsoleFactory::GpLogConsumerConsoleFactory (GpByteSerializer::SP aFormatter) noexcept:
 GpLogConsumerFactory(std::move(aFormatter))
 {
 }

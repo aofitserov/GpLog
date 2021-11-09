@@ -12,7 +12,7 @@ public:
     CLASS_DECLARE_DEFAULTS(GpLogConsumerConsoleFactory)
 
 public:
-                                GpLogConsumerConsoleFactory     (GpLogFormatter::SP aFormatter) noexcept;
+                                GpLogConsumerConsoleFactory     (GpByteSerializer::SP aFormatter) noexcept;
                                 GpLogConsumerConsoleFactory     (const GpLogConsumerConsoleConfigDesc& aConfigDesc);
     virtual                     ~GpLogConsumerConsoleFactory    (void) noexcept override final;
 

@@ -11,7 +11,7 @@ GpLogConsumerFileFactory::GpLogConsumerFileFactory
     const size_byte_t       aFileMaxSize,
     const milliseconds_t    aMaxFlushPeriod,
     const size_byte_t       aMaxBufferSize,
-    GpLogFormatter::SP      aFormatter
+    GpByteSerializer::SP    aFormatter
 ):
 GpLogConsumerFactory(std::move(aFormatter)),
 iOutFilePath(aOutFilePath),

@@ -35,17 +35,22 @@ SOURCES += \
 	Consumers/GpLogConsumerConfigBuilder.cpp \
 	Consumers/GpLogConsumerConfigDesc.cpp \
 	Consumers/GpLogConsumerFactory.cpp \
-	Formatters/GpLogFormatter.cpp \
+	Elements/GpLogElementMsgMarkTraceTS.cpp \
+	Elements/GpLogElementMsgStr.cpp \
+	Elements/GpLogElementMsgStrFn.cpp \
+	Formatters/GpLogElementFormatter.cpp \
 	Formatters/GpLogFormatterConfigBuilder.cpp \
 	Formatters/GpLogFormatterConfigDesc.cpp \
-	Formatters/GpLogFormatterFactory.cpp \
 	Formatters/Text/GpLogFormatterText.cpp \
 	Formatters/Text/GpLogFormatterTextConfigDesc.cpp \
+	Formatters/Text/GpLogFormatterTextElementMsgMarkTraceTS.cpp \
+	Formatters/Text/GpLogFormatterTextElementMsgStr.cpp \
+	Formatters/Text/GpLogFormatterTextElementMsgStrFn.cpp \
 	Formatters/Text/GpLogFormatterTextFactory.cpp \
-	GpLogChain.cpp \	
+	GpLogBuilder.cpp \
+	GpLogChain.cpp \
 	GpLogConfigDesc.cpp \
 	GpLogConsumeMode.cpp \
-	GpLogElement.cpp \
 	GpLogExecutor.cpp \
 	GpLogLevel.cpp \
 	GpLogRunnable.cpp \
@@ -64,19 +69,27 @@ HEADERS += \
 	Consumers/GpLogConsumerConfigDesc.hpp \
 	Consumers/GpLogConsumerFactory.hpp \
 	Consumers/GpLogConsumers.hpp \
-	Formatters/GpLogFormatter.hpp \
+	Elements/GpLogElement.hpp \
+	Elements/GpLogElementMsg.hpp \
+	Elements/GpLogElementMsgMarkTraceTS.hpp \
+	Elements/GpLogElementMsgStr.hpp \
+	Elements/GpLogElementMsgStrFn.hpp \
+	Elements/GpLogElements.hpp \
+	Formatters/GpLogElementFormatter.hpp \
 	Formatters/GpLogFormatterConfigBuilder.hpp \
 	Formatters/GpLogFormatterConfigDesc.hpp \
-	Formatters/GpLogFormatterFactory.hpp \
 	Formatters/GpLogFormatters.hpp \
 	Formatters/Text/GpLogFormatterText.hpp \
 	Formatters/Text/GpLogFormatterTextConfigDesc.hpp \
+	Formatters/Text/GpLogFormatterTextElementMsgMarkTraceTS.hpp \
+	Formatters/Text/GpLogFormatterTextElementMsgStr.hpp \
+	Formatters/Text/GpLogFormatterTextElementMsgStrFn.hpp \
 	Formatters/Text/GpLogFormatterTextFactory.hpp \
 	GpLog.hpp \
+	GpLogBuilder.hpp \
 	GpLogChain.hpp \
 	GpLogConfigDesc.hpp \
 	GpLogConsumeMode.hpp \
-	GpLogElement.hpp \
 	GpLogExecutor.hpp \
 	GpLogLevel.hpp \
 	GpLogRunnable.hpp \

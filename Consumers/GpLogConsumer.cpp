@@ -2,7 +2,7 @@
 
 namespace GPlatform {
 
-GpLogConsumer::GpLogConsumer (GpLogFormatter::SP aFormatter) noexcept:
+GpLogConsumer::GpLogConsumer (GpByteSerializer::SP aFormatter) noexcept:
 iFormatter(std::move(aFormatter))
 {
 }

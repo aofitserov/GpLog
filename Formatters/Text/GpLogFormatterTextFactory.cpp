@@ -3,11 +3,13 @@
 
 namespace GPlatform {
 
-GpLogFormatterTextFactory::GpLogFormatterTextFactory (void)
-{
-}
-
-GpLogFormatterTextFactory::GpLogFormatterTextFactory (const GpLogFormatterTextConfigDesc& /*aConfigDesc*/)
+GpLogFormatterTextFactory::GpLogFormatterTextFactory
+(
+    const GpLogFormatterTextConfigDesc& aConfigDesc,
+    const GpLogElementFormatter&        aElementFormatter
+):
+iConfigDesc(aConfigDesc),
+iElementFormatter(aElementFormatter)
 {
 }
 
@@ -15,9 +17,9 @@ GpLogFormatterTextFactory::~GpLogFormatterTextFactory (void) noexcept
 {
 }
 
-GpLogFormatter::SP  GpLogFormatterTextFactory::NewInstance (void) const
+GpByteSerializer::SP    GpLogFormatterTextFactory::NewInstance (void) const
 {
-    return MakeSP<GpLogFormatterText>();
+    return MakeSP<GpLogFormatterText>(iConfigDesc, iElementFormatter);
 }
 
 }//namespace GPlatform

@@ -4,7 +4,7 @@
 
 namespace GPlatform {
 
-GpLogConsumerConsole::GpLogConsumerConsole (GpLogFormatter::SP aFormatter) noexcept:
+GpLogConsumerConsole::GpLogConsumerConsole (GpByteSerializer::SP aFormatter) noexcept:
 GpLogConsumer(std::move(aFormatter))
 {
 }
@@ -21,7 +21,7 @@ void    GpLogConsumerConsole::Consume (GpLogChain::CSP aLogChain)
     GpByteWriterStorageByteArray    dataStorage(data);
     GpByteWriter                    dataWriter(dataStorage);
 
-    Formatter().Format(logChain, dataWriter);
+    Formatter().Format(std::make_any<std::reference_wrapper<const GpLogChain>>(logChain), dataWriter);
 
     std::cout << GpRawPtrByteR(data).AsStringView();
     std::cout.flush();

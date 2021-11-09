@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GpLogElement.hpp"
+#include "Elements/GpLogElements.hpp"
 
 namespace GPlatform {
 
