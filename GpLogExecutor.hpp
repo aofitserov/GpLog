@@ -20,8 +20,10 @@ public:
     void                    WakeupAll       (void) noexcept;
     void                    WakeupOne       (void) noexcept;
 
-    void                    AddElement      (std::string_view   aChainId,
+    void                    AddElement      (std::string&&      aChainId,
                                              GpLogElement&&     aLogElement);
+
+    void                    EndChain        (std::string_view   aChainId);
 
 private:
     mutable GpSpinlock      iLock;

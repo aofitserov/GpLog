@@ -62,7 +62,7 @@ void    GpLogRunnable::AddElement
 
         chain->AddElement(std::move(aLogElement));
 
-        PushToEnded(std::move(chain));
+        PushToEnd(std::move(chain));
     } else
     {
         GpLogChain::SP chain;
@@ -70,6 +70,17 @@ void    GpLogRunnable::AddElement
         chain = FindOrRegisterChain(aChainId);
         chain->AddElement(std::move(aLogElement));
     }
+}
+
+void    GpLogRunnable::EndChain (std::string_view aChainId)
+{
+    if (aChainId.length() == 0)
+    {
+        return;
+    }
+
+    GpLogChain::SP chain = FindAndRemoveChain(aChainId);
+    PushToEnd(std::move(chain));
 }
 
 GpLogChain::SP  GpLogRunnable::FindAndRemoveChain (std::string_view aChainId)
@@ -97,13 +108,13 @@ GpLogChain::SP  GpLogRunnable::FindOrRegisterChain (std::string_view aChainId)
     );
 }
 
-void    GpLogRunnable::PushToEnded (GpLogChain::SP&& aChain)
+void    GpLogRunnable::PushToEnd (GpLogChain::SP&& aChain)
 {
     std::scoped_lock lock(iChainsEndedLock);
     iChainsEnded.push(std::move(aChain));
 }
 
-std::optional<GpLogChain::SP>   GpLogRunnable::PopFromEnded (void)
+std::optional<GpLogChain::SP>   GpLogRunnable::PopFromEnd (void)
 {
     std::scoped_lock lock(iChainsEndedLock);
 
@@ -120,7 +131,7 @@ std::optional<GpLogChain::SP>   GpLogRunnable::PopFromEnded (void)
 
 void    GpLogRunnable::Consume (GpLogConsumer::C::Vec::SP& aConsumers)
 {
-    std::optional<GpLogChain::SP> chain = PopFromEnded();
+    std::optional<GpLogChain::SP> chain = PopFromEnd();
 
     while (chain.has_value())
     {
@@ -128,7 +139,7 @@ void    GpLogRunnable::Consume (GpLogConsumer::C::Vec::SP& aConsumers)
         {
             consumer->Consume(chain.value());
         }
-        chain = PopFromEnded();
+        chain = PopFromEnd();
     }
 }
 

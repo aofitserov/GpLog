@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../GpLogChain.hpp"
-#include "../Formatters/GpLogFormatter.hpp"
 
 namespace GPlatform {
 
@@ -12,7 +11,7 @@ public:
     CLASS_DECLARE_DEFAULTS(GpLogConsumer)
 
 protected:
-                            GpLogConsumer   (GpLogFormatter::SP aFormatter) noexcept;
+                            GpLogConsumer   (GpByteSerializer::SP aFormatter) noexcept;
 
 public:
     virtual                 ~GpLogConsumer  (void) noexcept;
@@ -21,10 +20,10 @@ public:
     virtual void            OnFlush         (void) noexcept = 0;
 
 protected:
-    const GpLogFormatter&   Formatter       (void) const {return iFormatter.VC();}
+    const GpByteSerializer& Formatter       (void) const noexcept {return iFormatter.VCn();}
 
 private:
-    GpLogFormatter::SP      iFormatter;
+    GpByteSerializer::SP    iFormatter;
 };
 
 }//namespace GPlatform

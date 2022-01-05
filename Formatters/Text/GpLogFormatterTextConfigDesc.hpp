@@ -13,6 +13,7 @@ public:
 
 public:
                         GpLogFormatterTextConfigDesc    (void) noexcept;
+                        GpLogFormatterTextConfigDesc    (const GpLogFormatterTextConfigDesc& aDesc);
     virtual             ~GpLogFormatterTextConfigDesc   (void) noexcept override final;
 
 public:

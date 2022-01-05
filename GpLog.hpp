@@ -2,4 +2,4 @@
 
 #include "Consumers/GpLogConsumers.hpp"
 #include "Formatters/GpLogFormatters.hpp"
-#include "GpLogger.hpp"
+#include "GpLogBuilder.hpp"

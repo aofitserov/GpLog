@@ -23,13 +23,14 @@ public:
 
     void                                AddElement          (std::string_view   aChainId,
                                                              GpLogElement&&     aLogElement);
+    void                                EndChain            (std::string_view   aChainId);
 
 private:
     GpLogChain::SP                      FindAndRemoveChain  (std::string_view aChainId);
     GpLogChain::SP                      FindOrRegisterChain (std::string_view aChainId);
 
-    void                                PushToEnded         (GpLogChain::SP&& aChain);
-    std::optional<GpLogChain::SP>       PopFromEnded        (void);
+    void                                PushToEnd           (GpLogChain::SP&& aChain);
+    std::optional<GpLogChain::SP>       PopFromEnd          (void);
 
     void                                Consume             (GpLogConsumer::C::Vec::SP& aConsumers);
     void                                ConsumeNotEnded     (GpLogConsumer::C::Vec::SP& aConsumers);

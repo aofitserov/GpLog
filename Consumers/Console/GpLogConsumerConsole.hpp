@@ -11,7 +11,7 @@ public:
     CLASS_DECLARE_DEFAULTS(GpLogConsumerConsole)
 
 public:
-                            GpLogConsumerConsole    (GpLogFormatter::SP aFormatter) noexcept;
+                            GpLogConsumerConsole    (GpByteSerializer::SP aFormatter) noexcept;
     virtual                 ~GpLogConsumerConsole   (void) noexcept override final;
 
     virtual void            Consume                 (GpLogChain::CSP aLogChain) override final;

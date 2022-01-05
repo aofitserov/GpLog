@@ -1,20 +1,25 @@
 #pragma once
 
-#include "../GpLogFormatter.hpp"
+#include "GpLogFormatterTextConfigDesc.hpp"
+#include "../../GpLogLevel.hpp"
+#include "../../Formatters/GpLogElementFormatter.hpp"
 
 namespace GPlatform {
 
-class GpLogFormatterText final: public GpLogFormatter
+class GpLogElementMsg;
+
+class GPLOG_API GpLogFormatterText final: public GpByteSerializer
 {
 public:
-    CLASS_REMOVE_CTRS_MOVE_COPY(GpLogFormatterText)
+    CLASS_REMOVE_CTRS_DEFAULT_MOVE_COPY(GpLogFormatterText)
     CLASS_DECLARE_DEFAULTS(GpLogFormatterText)
 
 public:
-                            GpLogFormatterText  (void) noexcept;
+                            GpLogFormatterText  (const GpLogFormatterTextConfigDesc&    aConfigDesc,
+                                                 const GpLogElementFormatter&           aElementFormatter);
     virtual                 ~GpLogFormatterText (void) noexcept override final;
 
-    virtual void            Format              (const GpLogChain&  aLogChain,
+    virtual void            Format              (const std::any&    aObject,
                                                  GpByteWriter&      aWriter) const override final;
 
 private:
@@ -30,10 +35,12 @@ private:
                                                  GpByteWriter&              aWriter) const;
     void                    WriteSteadyTS       (const microseconds_t       aSteadyTS,
                                                  GpByteWriter&              aWriter) const;
-    void                    WriteMessage        (std::string_view           aMessage,
+    void                    WriteMessage        (const GpLogElementMsg&     aMessage,
                                                  GpByteWriter&              aWriter) const;
 
 private:
+    const GpLogFormatterTextConfigDesc                                      iConfigDesc;
+    const GpLogElementFormatter                                             iElementFormatter;
     static const GpArray<std::string, GpLogLevel::SCount().As<size_t>()>    sLevels;
 };
 

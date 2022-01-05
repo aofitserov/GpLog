@@ -46,10 +46,10 @@ void    GpLogger::Stop (void)
 
 void    GpLogger::Log
 (
-    std::string_view                aMessage,
+    GpLogElementMsg::CSP            aMessage,
     const GpLogLevel::EnumT         aLevel,
-    std::string_view                aCategory,
-    std::string_view                aChainId,
+    std::string&&                   aCategory,
+    std::string&&                   aChainId,
     const GpLogConsumeMode::EnumT   aConsumeMode
 )
 {
@@ -60,12 +60,12 @@ void    GpLogger::Log
 
     if (iter == iCategoryLevels.end())
     {
-        category    = std::string("default"_sv);
-        maxLevel    = iDefaultLevel;
+        category = std::string("default"_sv);
+        maxLevel = iDefaultLevel;
     } else
     {
-        category    = aCategory;
-        maxLevel    = iter->second.Value();
+        category = std::move(aCategory);
+        maxLevel = iter->second.Value();
     }
 
     if (int(aLevel) < int(maxLevel))
@@ -78,16 +78,21 @@ void    GpLogger::Log
     GpLogElement logElement
     (
         GpDateTimeOps::SUnixTS_ms(),
-        GpDateTimeOps::SSteadyTS_us(),
+        GpDateTimeOps::SSteadyTS_us() - GpDateTimeOps::SSteadyTS_us_AtAppStart(),
         std::this_thread::get_id(),
         currentTask.IsNotNULL() ? std::string(currentTask->Name()) : std::string(""_sv),
         aLevel,
         std::move(category),
-        std::string(aMessage),
+        std::move(aMessage),
         aConsumeMode
     );
 
-    iLogExecutor->AddElement(aChainId, std::move(logElement));
+    iLogExecutor->AddElement(std::move(aChainId), std::move(logElement));
+}
+
+void    GpLogger::EndChain (std::string_view aChainId)
+{
+    iLogExecutor->EndChain(aChainId);
 }
 
 }//namespace GPlatform

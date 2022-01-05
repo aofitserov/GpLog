@@ -1,4 +1,6 @@
 #include "GpLogFormatterText.hpp"
+#include "../../GpLogChain.hpp"
+#include "../../Elements/GpLogElementMsg.hpp"
 #include <sstream>
 
 namespace GPlatform {
@@ -12,7 +14,14 @@ const GpArray<std::string, GpLogLevel::SCount().As<size_t>()>   GpLogFormatterTe
     std::string("[!]"_sv)
 };
 
-GpLogFormatterText::GpLogFormatterText (void) noexcept
+
+GpLogFormatterText::GpLogFormatterText
+(
+    const GpLogFormatterTextConfigDesc& aConfigDesc,
+    const GpLogElementFormatter&        aElementFormatter
+):
+iConfigDesc(aConfigDesc),
+iElementFormatter(aElementFormatter)
 {
 }
 
@@ -22,24 +31,22 @@ GpLogFormatterText::~GpLogFormatterText (void) noexcept
 
 void    GpLogFormatterText::Format
 (
-    const GpLogChain&   aLogChain,
-    GpByteWriter&       aWriter
+    const std::any& aObject,
+    GpByteWriter&   aWriter
 ) const
 {
-    const GpLogElement::C::Vec::Val& chainElements = aLogChain.Elements();
+    const GpLogChain&                   logChain        = std::any_cast<std::reference_wrapper<const GpLogChain>>(aObject).get();
+    const GpLogElement::C::Vec::Val&    chainElements   = logChain.Elements();
 
-    //Separator (begin)
-    std::string_view chainId = aLogChain.ChainId();
-    if (chainId.length() > 0)
+    std::string_view    chainId         = logChain.ChainId();
+    const size_t        chainIdLength   = chainId.length();
+
+    if (chainIdLength > 0)
     {
         aWriter
-            .Bytes("-------------------------------------- Begin: "_sv)
+            .Bytes("==vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv[ Chain begin: "_sv)
             .Bytes(chainId)
-            .Bytes(" --------------------------------------\n"_sv);
-    } else
-    {
-        aWriter
-            .Bytes("-------------------------------------- Begin --------------------------------------\n"_sv);
+            .Bytes(" ]vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv==\n"_sv);
     }
 
     for (const GpLogElement& element: chainElements)
@@ -49,24 +56,19 @@ void    GpLogFormatterText::Format
         WriteSteadyTS(element.SteadyTS(), aWriter);
         WriteThreadId(element.ThreadId(), aWriter);
         WriteTaskName(element.TaskName(), aWriter);
-        WriteCategory(element.Category(), aWriter);     
+        WriteCategory(element.Category(), aWriter);
         WriteMessage(element.Message(), aWriter);
 
         aWriter.
             Bytes("\n"_sv);
     }
 
-    //Separator (end)
-    if (chainId.length() > 0)
+    if (chainIdLength > 0)
     {
         aWriter
-            .Bytes("-------------------------------------- End: "_sv)
+            .Bytes("==^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[ Chain end: "_sv)
             .Bytes(chainId)
-            .Bytes(" --------------------------------------\n"_sv);
-    } else
-    {
-        aWriter
-            .Bytes("-------------------------------------- End --------------------------------------\n"_sv);
+            .Bytes(" ]^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^==\n"_sv);
     }
 }
 
@@ -137,23 +139,27 @@ void    GpLogFormatterText::WriteSteadyTS
     GpByteWriter&           aWriter
 ) const
 {
-    const std::string str = StrOps::SFromDouble(aSteadyTS.Value());
+    const std::string str = StrOps::SFromDouble(aSteadyTS.As<seconds_t>().Value());
 
     aWriter
-        .Bytes(", steady TS: "_sv)
+        .Bytes(", STS: "_sv)
         .Bytes(str)
-        .Bytes("us)"_sv);
+        .Bytes("s)"_sv);
 }
 
 void    GpLogFormatterText::WriteMessage
 (
-    std::string_view    aMessage,
-    GpByteWriter&       aWriter
+    const GpLogElementMsg&  aMessage,
+    GpByteWriter&           aWriter
 ) const
 {
-    aWriter
-        .Bytes("\n"_sv)
-        .Bytes(aMessage);
+    aWriter.Bytes("\n"_sv);
+
+    iElementFormatter.Find(typeid(aMessage)).Format
+    (
+        std::make_any<std::reference_wrapper<const GpLogElementMsg>>(aMessage),
+        aWriter
+    );
 }
 
 }//namespace GPlatform

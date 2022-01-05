@@ -1,7 +1,6 @@
 #pragma once
 
-#include "GpLogLevel.hpp"
-#include "GpLogConsumeMode.hpp"
+#include "GpLogElementMsg.hpp"
 
 namespace GPlatform {
 
@@ -18,10 +17,10 @@ public:
                                                      std::string&&                  aTaskName,
                                                      const GpLogLevel::EnumT        aLevel,
                                                      std::string&&                  aCategory,
-                                                     std::string&&                  aMessage,
+                                                     GpLogElementMsg::CSP           aMessage,
                                                      const GpLogConsumeMode::EnumT  aConsumeMode) noexcept;
     inline                          GpLogElement    (GpLogElement&& aElement) noexcept;
-                                    ~GpLogElement   (void) noexcept;
+                                    ~GpLogElement   (void) noexcept = default;
 
     GpLogElement&                   operator=       (GpLogElement&& aElement) noexcept = delete;
 
@@ -31,7 +30,7 @@ public:
     std::string_view                TaskName        (void) const noexcept {return iTaskName;}
     GpLogLevel::EnumT               Level           (void) const noexcept {return iLevel;}
     std::string_view                Category        (void) const noexcept {return iCategory;}
-    std::string_view                Message         (void) const noexcept {return iMessage;}
+    const GpLogElementMsg&          Message         (void) const {return iMessage.VC();}
     GpLogConsumeMode::EnumT         ConsumeMode     (void) const noexcept {return iConsumeMode;}
 
 private:
@@ -41,7 +40,7 @@ private:
     const std::string               iTaskName;
     const GpLogLevel::EnumT         iLevel;
     const std::string               iCategory;
-    const std::string               iMessage;
+    GpLogElementMsg::CSP            iMessage;
     const GpLogConsumeMode::EnumT   iConsumeMode;
 };
 
@@ -53,7 +52,7 @@ GpLogElement::GpLogElement
     std::string&&                   aTaskName,
     const GpLogLevel::EnumT         aLevel,
     std::string&&                   aCategory,
-    std::string&&                   aMessage,
+    GpLogElementMsg::CSP            aMessage,
     const GpLogConsumeMode::EnumT   aConsumeMode
 ) noexcept:
 iUnixTS(aUnixTS),

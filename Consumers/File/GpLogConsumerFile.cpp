@@ -11,7 +11,7 @@ GpLogConsumerFile::GpLogConsumerFile
     const size_byte_t       aFileMaxSize,
     const milliseconds_t    aMaxFlushPeriod,
     const size_byte_t       aMaxBufferSize,
-    GpLogFormatter::SP      aFormatter
+    GpByteSerializer::SP    aFormatter
 ):
 GpLogConsumer(std::move(aFormatter)),
 iOutFilePath(aOutFilePath),
@@ -34,7 +34,7 @@ void    GpLogConsumerFile::Consume (GpLogChain::CSP aLogChain)
     dataStorage.OffsetToEnd();
     GpByteWriter                    dataWriter(dataStorage);
 
-    Formatter().Format(logChain, dataWriter);
+    Formatter().Format(std::make_any<std::reference_wrapper<const GpLogChain>>(logChain), dataWriter);
 
     const milliseconds_t nowSteadyTS = GpDateTimeOps::SSteadyTS_ms();
 

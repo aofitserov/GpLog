@@ -17,7 +17,7 @@ public:
                                                                  const size_byte_t      aFileMaxSize,
                                                                  const milliseconds_t   aMaxFlushPeriod,
                                                                  const size_byte_t      aMaxBufferSize,
-                                                                 GpLogFormatter::SP     aFormatter);
+                                                                 GpByteSerializer::SP   aFormatter);
                                     GpLogConsumerFileFactory    (const GpLogConsumerFileConfigDesc& aConfigDesc);
     virtual                         ~GpLogConsumerFileFactory   (void) noexcept override final;
 

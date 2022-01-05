@@ -20,7 +20,7 @@ public:
                                                      const size_byte_t      aFileMaxSize,
                                                      const milliseconds_t   aMaxFlushPeriod,
                                                      const size_byte_t      aMaxBufferSize,
-                                                     GpLogFormatter::SP     aFormatter);
+                                                     GpByteSerializer::SP   aFormatter);
     virtual                     ~GpLogConsumerFile  (void) noexcept override final;
 
     virtual void                Consume             (GpLogChain::CSP aLogChain) override final;
