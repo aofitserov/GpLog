@@ -4,6 +4,19 @@
 
 namespace GPlatform {
 
+GP_ENUM(GPLOG_API, GpLogFieldType,
+        LEVEL,
+        TS,
+        STS,
+        THREAD_ID,
+        TASK_NAME,
+        CATEGORY,
+        ONE_LINE
+);
+
+using GpLogFieldTypeFlags = GpEnumFlagsST<GpLogFieldType>;
+
+
 class GPLOG_API GpLogFormatterTextConfigDesc final: public GpTypeStructBase
 {
 public:
@@ -17,6 +30,7 @@ public:
     virtual             ~GpLogFormatterTextConfigDesc   (void) noexcept override final;
 
 public:
+    GpLogFieldTypeFlags fields;
 };
 
 }//namespace GPlatform
