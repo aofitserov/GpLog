@@ -2,13 +2,16 @@
 
 namespace GPlatform {
 
+GP_ENUM_IMPL(GpLogFieldType);
+
 TYPE_STRUCT_IMPLEMENT(GpLogFormatterTextConfigDesc, GP_MODULE_UUID)
 
 GpLogFormatterTextConfigDesc::GpLogFormatterTextConfigDesc (void) noexcept
 {
 }
 
-GpLogFormatterTextConfigDesc::GpLogFormatterTextConfigDesc (const GpLogFormatterTextConfigDesc& /*aDesc*/)
+GpLogFormatterTextConfigDesc::GpLogFormatterTextConfigDesc (const GpLogFormatterTextConfigDesc& aDesc)
+    : fields(aDesc.fields)
 {
 }
 
@@ -16,9 +19,9 @@ GpLogFormatterTextConfigDesc::~GpLogFormatterTextConfigDesc (void) noexcept
 {
 }
 
-void    GpLogFormatterTextConfigDesc::_SCollectStructProps (GpTypePropInfo::C::Vec::Val& /*aPropsOut*/)
+void    GpLogFormatterTextConfigDesc::_SCollectStructProps (GpTypePropInfo::C::Vec::Val& aPropsOut)
 {
-    //PROP();
+    PROP(fields);
 }
 
 }//namespace GPlatform

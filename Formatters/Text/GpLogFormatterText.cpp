@@ -1,7 +1,9 @@
 #include "GpLogFormatterText.hpp"
 #include "../../GpLogChain.hpp"
 #include "../../Elements/GpLogElementMsg.hpp"
+
 #include <sstream>
+#include <iostream>
 
 namespace GPlatform {
 
@@ -51,12 +53,38 @@ void    GpLogFormatterText::Format
 
     for (const GpLogElement& element: chainElements)
     {
-        WriteLevel(element.Level(), aWriter);
-        WriteUnixTS(element.UnixTS(), aWriter);
-        WriteSteadyTS(element.SteadyTS(), aWriter);
-        WriteThreadId(element.ThreadId(), aWriter);
-        WriteTaskName(element.TaskName(), aWriter);
-        WriteCategory(element.Category(), aWriter);
+        if (iConfigDesc.fields.Test(GpLogFieldType::LEVEL))
+            WriteLevel(element.Level(), aWriter);
+
+        const bool TimeFieldsAreEnabled
+                = iConfigDesc.fields.Test(GpLogFieldType::TS) || iConfigDesc.fields.Test(GpLogFieldType::STS);
+        if (TimeFieldsAreEnabled)
+            aWriter.Bytes("("_sv);
+
+        if (iConfigDesc.fields.Test(GpLogFieldType::TS))
+            WriteUnixTS(element.UnixTS(), aWriter);
+
+        if (iConfigDesc.fields.Test(GpLogFieldType::STS))
+        {
+            WriteSteadyTS(element.SteadyTS(), aWriter);
+            aWriter.Bytes("s"_sv);
+        }
+
+        if (TimeFieldsAreEnabled)
+            aWriter.Bytes(")"_sv);
+
+        if (iConfigDesc.fields.Test(GpLogFieldType::THREAD_ID))
+            WriteThreadId(element.ThreadId(), aWriter);
+
+        if (iConfigDesc.fields.Test(GpLogFieldType::TASK_NAME))
+            WriteTaskName(element.TaskName(), aWriter);
+
+        if (iConfigDesc.fields.Test(GpLogFieldType::CATEGORY))
+            WriteCategory(element.Category(), aWriter);
+
+        aWriter.
+            Bytes(iConfigDesc.fields.Test(GpLogFieldType::ONE_LINE) ? " | "_sv : "\n"_sv);
+
         WriteMessage(element.Message(), aWriter);
 
         aWriter.
@@ -92,7 +120,7 @@ void    GpLogFormatterText::WriteThreadId
     s << aThreadId;
 
     aWriter
-        .Bytes(" ThreadID: "_sv)
+        .Bytes(" ThreadID:"_sv)
         .Bytes(s.str());
 }
 
@@ -103,7 +131,7 @@ void    GpLogFormatterText::WriteTaskName
 ) const
 {
     aWriter
-        .Bytes(", task: '"_sv)
+        .Bytes(" task:'"_sv)
         .Bytes(aTaskName)
         .Bytes("'"_sv);
 }
@@ -115,7 +143,7 @@ void    GpLogFormatterText::WriteCategory
 ) const
 {
     aWriter
-        .Bytes(", category: '"_sv)
+        .Bytes(" category:'"_sv)
         .Bytes(aCategory)
         .Bytes("'"_sv);
 }
@@ -129,7 +157,7 @@ void    GpLogFormatterText::WriteUnixTS
     const std::string str = GpDateTimeOps::SUnixTsToStr(aUnixTS, GpDateTimeFormat::STD_DATE_TIME);
 
     aWriter
-        .Bytes("(TS: "_sv)
+        .Bytes("TS:"_sv)
         .Bytes(str);
 }
 
@@ -142,9 +170,8 @@ void    GpLogFormatterText::WriteSteadyTS
     const std::string str = StrOps::SFromDouble(aSteadyTS.As<seconds_t>().Value());
 
     aWriter
-        .Bytes(", STS: "_sv)
-        .Bytes(str)
-        .Bytes("s)"_sv);
+        .Bytes(" STS:"_sv)
+        .Bytes(str);
 }
 
 void    GpLogFormatterText::WriteMessage
@@ -153,8 +180,6 @@ void    GpLogFormatterText::WriteMessage
     GpByteWriter&           aWriter
 ) const
 {
-    aWriter.Bytes("\n"_sv);
-
     iElementFormatter.Find(typeid(aMessage)).Format
     (
         std::make_any<std::reference_wrapper<const GpLogElementMsg>>(aMessage),
